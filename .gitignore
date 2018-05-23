@@ -102,3 +102,6 @@ ENV/
 .vscode/
 
 .connection.json
+data/
+filter/
+analysis/

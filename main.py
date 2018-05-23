@@ -10,12 +10,11 @@ def main():
     conn, cur = loader.connection()
     loader.get_struct(conn, cur)
     loader.get_dates(conn, cur)
-    loader.get_sfile(conn, cur, '2017-03-21')
 
-	an = analyzer.Analyzer()
+    an = analyzer.Analyzer()
     # TODO: for dates
-    get_sfile(conn, cur, '2017-03-21')
-    an.filter()
+    loader.get_sfile(conn, cur, '2017-03-21')
+    an.filtering()
 
 
 if __name__ == "__main__":

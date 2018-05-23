@@ -5,6 +5,7 @@
 import os
 from files import SFile
 from files import FFile
+from files import AFile
 
 
 class Analyzer:
@@ -12,8 +13,10 @@ class Analyzer:
     def __init__(self):
         self.data_path = 'data/'
         self.filter_path = 'filter/'
+        self.analysis_path = 'analysis/'
         self._data = []
         self._filter = []
+        self._analysis = []
 
     def _read_data(self):
         '''Считать данные из директории по умолчанию.'''
@@ -33,7 +36,7 @@ class Analyzer:
             print('Warning: {} files do not read!'.format(error_files))
         print()
 
-    def read_filter(self):
+    def read_filtering(self):
         '''Считать данные фильтрации из директории по умолчанию.'''
         count_files = len(os.listdir(self.filter_path))
         for file_name in os.listdir(self.filter_path):
@@ -51,7 +54,7 @@ class Analyzer:
             print('Warning: {} files do not read!'.format(error_files))
         print()
 
-    def _write_filter(self):
+    def _write_filtering(self):
         '''Записать данные фильтрации в дирректорию по умолчанию.'''
         for one_filter in self._filter:
             try:
@@ -66,14 +69,36 @@ class Analyzer:
             print('Warning: {} files do not save!'.format(error_files))
         print()
 
-    def filter(self):
+    def filtering(self):
         '''Фильтровать данные.'''
         self._read_data()
         self._filter = [FFile(one_data.file_name) for one_data in self._data]
-        self._make_filter()
-        self._write_filter()
+        self._make_filtering()
+        self._write_filtering()
         self._data.clear()
 
-    def _make_filter(self):
+    def _make_filtering(self):
         '''Процесс фильтрации данных.'''
+        pass
+
+    def analyze(self):
+        '''Анализировать данные.'''
+        # За все года, по всем кварталам.
+        # За квартал по всем годам.
+        # self._analysis = {'0.{}'.format(n): AFile('0.{}'.format(n)) for n in range(5)}
+        self._analysis = [AFile('0.{}'.format(n)) for n in range(5)]
+        for i in self._analysis:
+            i.write()
+        # За год, по всем кварталам.
+        # self._analysis['2017.0'] = AFile('2017.0')
+        # # За год, за квартал
+        # self._analysis.append(AFile('2017.1'))
+        # self._analysis.append(AFile('2017.2'))
+        # self._analysis.append(AFile('2017.3'))
+        # self._analysis.append(AFile('2017.4'))
+        self._make_analyze()
+        self._analysis.clear()
+    
+    def _make_analyze(self):
+        '''Процесс анализа данных.'''
         pass
