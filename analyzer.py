@@ -73,34 +73,43 @@ class Analyzer:
         '''Фильтровать данные.'''
         self._read_data()
         self._filter = [FFile(one_data.file_name) for one_data in self._data]
-        self._make_filtering()
+        print('The first stage of filtration')
+        self._make_filtering(reverse=False)
+        print('The second stage of filtration')
+        self._make_filtering(reverse=True)
         self._write_filtering()
         self._data.clear()
 
-    def _make_filtering(self):
-        '''Процесс фильтрации данных.'''
+    def _make_filtering(self, reverse=False):
+        '''Процесс фильтрации данных с направлением.'''
+        if reverse:
+            direction = -1
+        else:
+            direction = 1
         w = 15
         lev = 4.5
         nmin = 10
         for h in range(680):
-            print('\rFiltration at an altitude of {}'.format(h + 1), end=' ')
-            for t in range(len(self._filter) - w - 1):
+            print('\r{}%'.format(int((h + 1) * 0.147059)), end='')
+            for t in range(0 if direction > 0 else len(self._filter) - 1, 
+                           len(self._filter) - w - 1 if direction > 0 else w, 
+                           1 if direction > 0 else -1):
                 num = 0
                 mean = 0.0
                 for offset in range(w):
-                    if self._filter[t + offset][h] == 0:
-                        mean += self._data[t + offset][h][0]
+                    if self._filter[t + offset * direction][h] == 0:
+                        mean += self._data[t + offset * direction][h][0]
                         num += 1
                 if num >= nmin:
                     mean /= num
                     dev = 0.0
                     for offset in range(w):
-                        if self._filter[t + offset][h] == 0:
-                            dev += (self._data[t + offset][h][0] - mean) ** 2
+                        if self._filter[t + offset * direction][h] == 0:
+                            dev += (self._data[t + offset * direction][h][0] - mean) ** 2
                     dev = (dev / (num - 1)) ** 0.5
-                    if abs(self._data[t + w][h][0] - mean) > (lev * dev):
-                        self._filter[t + w][h] = 1 # self._data[t + w][h]
-        print()
+                    if abs(self._data[t + w * direction][h][0] - mean) > (lev * dev):
+                        self._filter[t + w * direction][h] = self._data[t + w * direction][h][0]
+        print(' completed.')
 
     def analyze(self):
         '''Анализировать данные.'''
