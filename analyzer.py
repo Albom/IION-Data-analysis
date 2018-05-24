@@ -95,7 +95,7 @@ class Analyzer:
         for h in range(680):
             print('\r{}%'.format(int((h + 1) * 0.147059)), end='')
             for t in range(0 if direction > 0 else len(self._filter) - 1, 
-                           len(self._filter) - w - 1 if direction > 0 else w, 
+                           len(self._filter) - w if direction > 0 else w - 1, 
                            1 if direction > 0 else -1):
                 num = 0
                 mean = 0.0
@@ -134,6 +134,7 @@ class Analyzer:
                     num = clear(num, t, h)
             else:
                 num = clear(num, t, h)
+        print(' completed.')
                         
     def analyze(self):
         '''Анализировать данные.'''
