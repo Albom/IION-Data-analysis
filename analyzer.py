@@ -77,6 +77,9 @@ class Analyzer:
         self._make_filtering(reverse=False)
         print('The second stage of filtration')
         self._make_filtering(reverse=True)
+        print('The third stage of filtration')
+        self._find_coherent()
+
         self._write_filtering()
         self._data.clear()
 
@@ -111,6 +114,27 @@ class Analyzer:
                         self._filter[t + w * direction][h] = self._data[t + w * direction][h][0]
         print(' completed.')
 
+    def _find_coherent(self, wmin=21, wmax=24):
+        '''Поиск когерентных отражений.'''
+        def clear(num, t, h):
+            '''Очистка помех не попадающих в диапазон wmin-wmax по высоте.'''
+            if wmin > num or num > wmax:
+                while num >= 0:
+                    self._filter[t][h - num] = 0
+                    num -= 1
+            return 0
+
+        num = 0
+        for t in range(len(self._filter)):
+            print('\r{}%'.format(int((t + 1) * (100 / len(self._filter)))), end='')
+            for h in range(len(self._filter[t])):
+                if self._filter[t][h] > 0:
+                        num += 1
+                else:
+                    num = clear(num, t, h)
+            else:
+                num = clear(num, t, h)
+                        
     def analyze(self):
         '''Анализировать данные.'''
         # За все года, по всем кварталам.
